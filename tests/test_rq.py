@@ -18,7 +18,7 @@
 # Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA.
 #
 # Authors:
-#     Luis Cañas-Díaz <lcanas@bitergia.com>
+#     Alvaro del Castillo <acs@bitergia.com>
 #
 
 
