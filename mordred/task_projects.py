@@ -111,11 +111,15 @@ class TaskProjects(Task):
         projects_file = config['projects']['projects_file']
 
         logger.info("Getting projects file from URL: %s ", projects_url)
-        res = requests.get(projects_url)
-        res.raise_for_status()
-        projects = res.json()
-        with open(projects_file, "w") as fprojects:
-            json.dump(projects, fprojects, indent=True)
+        projects = {}
+        try:
+            res = requests.get(projects_url)
+            res.raise_for_status()
+            projects = res.json()
+            with open(projects_file, "w") as fprojects:
+                json.dump(projects, fprojects, indent=True)
+        except requests.exceptions.ConnectionError:
+            logger.error("ConnectionError getting projects from remote url: %s ", projects_url)
 
         return projects
 
