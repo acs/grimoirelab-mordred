@@ -24,6 +24,7 @@
 
 import json
 import logging
+import pickle
 import queue
 import sys
 import threading
@@ -54,6 +55,8 @@ from mordred.task_track import TaskTrackItems
 
 logger = logging.getLogger(__name__)
 
+Q_MORDRED_TASKS = 'mordred'
+
 
 class Mordred:
 
@@ -74,6 +77,16 @@ class Mordred:
             pipe.lrange(Q_STORAGE_ITEMS, 0, 0)
             pipe.execute()[0]
             redis_access = True
+            print("Connected to redis. Creating mordred status queue ...")
+            data = {
+                'task_id': 'id',
+                'status': 'Mordred started',
+                'result': 'OK',
+                'date': datetime.now()
+            }
+
+            conn.rpush(Q_MORDRED_TASKS, pickle.dumps(data))
+
         except redis.exceptions.ConnectionError:
             logging.error("Can not connect to raw items in redis %s", redis_url)
 

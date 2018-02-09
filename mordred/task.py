@@ -22,7 +22,14 @@
 #     Alvaro del Castillo <acs@bitergia.com>
 #
 
+import functools
 import logging
+import pickle
+
+from datetime import datetime
+from time import time
+
+import redis
 
 from grimoire_elk.arthur import get_ocean_backend
 from grimoire_elk.utils import get_connector_from_name, get_elastic
@@ -30,6 +37,38 @@ from grimoire_elk.elk.utils import grimoire_con
 
 logger = logging.getLogger(__name__)
 
+
+Q_MORDRED_TASKS = 'mordred'
+
+
+def pubstatus(func):
+    @functools.wraps(func)
+    def decorator(self, *args, **kwargs):
+        task_init = time()
+        start_date = datetime.now()
+        try:
+            data = func(self, *args, **kwargs)
+        except Exception as ex:
+            logger.error("Exception in task %s", ex)
+
+        redis_url = self.conf['es_collection']['redis_url']
+        try:
+            # Try to access REDIS items to check it is working
+            conn = redis.StrictRedis.from_url(redis_url)
+            data = {
+                'task_id': self.__class__.__name__,
+                'status': 'Task started',
+                'result': 'OK',
+                'start_date': start_date,
+                'end_date': datetime.now(),
+                'execution_time': time() - task_init
+            }
+
+            conn.rpush(Q_MORDRED_TASKS, pickle.dumps(data))
+        except redis.exceptions.ConnectionError:
+            logging.error("Can not connect to redis %s", redis_url)
+        return data
+    return decorator
 
 class Task():
     """ Basic class shared by all tasks """
@@ -54,6 +93,7 @@ class Task():
         """
         return True
 
+    @pubstatus
     def execute(self):
         """ Execute the Task """
         logger.debug("A bored task. It does nothing!")

@@ -36,7 +36,7 @@ from datetime import datetime
 
 import requests
 
-from mordred.task import Task
+from mordred.task import Task, pubstatus
 from mordred.task_manager import TasksManager
 from sortinghat import api
 from sortinghat.cmd.init import Init
@@ -64,6 +64,7 @@ class TaskInitSortingHat(Task):
     def is_backend_task(self):
         return False
 
+    @pubstatus
     def execute(self):
         code = Init(**self.sh_kwargs).run(self.db_sh, '--reuse')
 
@@ -84,6 +85,7 @@ class TaskIdentitiesCollection(Task):
                           'database': self.db_sh, 'host': self.db_host,
                           'port': None}
 
+    @pubstatus
     def execute(self):
 
         # FIXME this should be called just once
@@ -127,6 +129,7 @@ class TaskIdentitiesLoad(Task):
             logger.error("[sortinghat] Error in command %s", cmd)
         return proc.returncode
 
+    @pubstatus
     def execute(self):
 
         def is_remote(filename):
@@ -334,6 +337,7 @@ class TaskIdentitiesExport(Task):
 
         return repo_file_sha
 
+    @pubstatus
     def execute(self):
 
         def export_identities(filename):
@@ -482,6 +486,7 @@ class TaskIdentitiesMerge(Task):
         self.__execute_sh_command(cmd)
         return
 
+    @pubstatus
     def execute(self):
 
         # ** START SYNC LOGIC **

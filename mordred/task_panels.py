@@ -32,7 +32,7 @@ from urllib.parse import urljoin
 
 from kidash.kidash import import_dashboard, get_dashboard_name, \
     exists_dashboard
-from mordred.task import Task
+from mordred.task import Task, pubstatus
 
 logger = logging.getLogger(__name__)
 
@@ -241,6 +241,7 @@ class TaskPanels(Task):
                 data_sources.append('mbox')
             import_dashboard(es_enrich, panel_file, data_sources=data_sources)
 
+    @pubstatus
     def execute(self):
         # Configure kibiter
         if self.__configure_kibiter():
