@@ -45,7 +45,7 @@ from grimoire_elk.elk.elastic import ElasticSearch
 from grimoire_elk.utils import get_connector_from_name, get_elastic
 
 from mordred.error import DataCollectionError
-from mordred.task import Task
+from mordred.task import Task, pubstatus
 from mordred.task_projects import TaskProjects
 
 
@@ -313,6 +313,7 @@ class TaskRawDataArthurCollection(Task):
 
         return(ajson)
 
+    @pubstatus
     def execute(self):
 
         def check_arthur_task(repo, backend_args):

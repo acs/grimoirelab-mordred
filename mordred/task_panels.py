@@ -411,6 +411,7 @@ class TaskPanelsAliases(Task):
             # Standard alias for the enrich index
             self.__create_alias(es_enrich_url, index_enrich, real_alias)
 
+    @pubstatus
     def execute(self):
         # Create the aliases
         print("Elasticsearch aliases: creating...")
@@ -599,6 +600,7 @@ class TaskPanelsMenu(Task):
 
         return omenu
 
+    @pubstatus
     def execute(self):
         print("Kibiter/Kibana: uploading dashboard menu...")
         # Create the panels menu

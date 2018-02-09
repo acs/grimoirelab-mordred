@@ -33,7 +33,7 @@ from grimoire_elk.elastic_items import ElasticItems
 from grimoire_elk.elk.elastic import ElasticSearch
 
 from mordred.error import DataEnrichmentError
-from mordred.task import Task
+from mordred.task import Task, pubstatus
 from mordred.task_manager import TasksManager
 from mordred.task_panels import TaskPanelsAliases
 from mordred.task_projects import TaskProjects
@@ -186,6 +186,7 @@ class TaskEnrich(Task):
         enrich_backend = self._get_enrich_backend()
         do_studies(enrich_backend)
 
+    @pubstatus
     def execute(self):
         cfg = self.config.get_conf()
 

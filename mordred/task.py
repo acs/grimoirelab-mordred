@@ -64,6 +64,9 @@ def pubstatus(func):
                 'execution_time': time() - task_init
             }
 
+            if self.backend_section:
+                data['backend'] = self.backend_section
+
             conn.rpush(Q_MORDRED_TASKS, pickle.dumps(data))
         except redis.exceptions.ConnectionError:
             logging.error("Can not connect to redis %s", redis_url)

@@ -33,7 +33,7 @@ import requests
 from copy import deepcopy
 
 from mordred.config import Config
-from mordred.task import Task
+from mordred.task import Task, pubstatus
 from mordred.eclipse_projects_lib import get_repos_list_project, get_mls_repos
 
 logger = logging.getLogger(__name__)
@@ -90,6 +90,7 @@ class TaskProjects(Task):
 
         return repos
 
+    @pubstatus
     def execute(self):
         config = self.conf
 
