@@ -46,6 +46,8 @@ from sortinghat.db.database import Database
 
 logger = logging.getLogger(__name__)
 
+CHECK_ENRICH_TIME = 10
+
 
 class TaskEnrich(Task):
     """ Basic class shared by all enriching tasks """
@@ -272,7 +274,7 @@ class TaskEnrich(Task):
         # ** START SYNC LOGIC **
         # Check that identities tasks are not active before executing
         while True:
-            time.sleep(10)  # check each 10s if the enrichment could start
+            time.sleep(CHECK_ENRICH_TIME)  # check each 10s if the enrichment could start
             with TasksManager.IDENTITIES_TASKS_ON_LOCK:
                 with TasksManager.NUMBER_ENRICH_TASKS_ON_LOCK:
                     in_identities = TasksManager.IDENTITIES_TASKS_ON
